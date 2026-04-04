@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>価値観ボード（スマホ安定版）</title>
+<style>
+  :root{
+    --bg:#11151c;
+    --panel:#1a2130;
+    --panel2:#20293a;
+    --card:#2a3448;
+    --card2:#34415b;
+    --text:#eef3ff;
+    --muted:#b1bdd3;
+    --border:#33415a;
+    --accent:#88a8ff;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;
+    color:var(--text);
+    background:linear-gradient(180deg,#0f131a,#141b26);
+  }
+  .header{
+    position:sticky; top:0; z-index:50;
+    padding:14px 16px 10px;
+    background:rgba(15,19,26,.94);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(10px);
+  }
+  h1{margin:0;font-size:20px}
+  .sub{
+    margin-top:6px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.5;
+  }
+  .board-wrap{
+    overflow-x:auto;
+    padding:14px;
+  }
+  .board{
+    display:grid;
+    grid-template-columns:320px repeat(5, 250px);
+    gap:12px;
+    min-width:max-content;
+    align-items:start;
+  }
+  .col{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    min-height:72vh;
+    box-shadow:0 8px 24px rgba(0,0,0,.22);
+  }
+  .col-header{
+    padding:12px 12px 10px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    position:sticky;
+    top:60px;
+    background:rgba(26,33,48,.97);
+    border-radius:var(--radius) var(--radius) 0 0;
+    z-index:5;
+  }
+  .col-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:15px;
+    font-weight:700;
+  }
+  .symbol{
+    width:24px;height:24px;border-radius:8px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--panel2);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:14px;
+  }
+  .badge{
+    background:var(--panel2);
+    border:1px solid rgba(255,255,255,.08);
+    padding:3px 8px;
+    border-radius:999px;
+    font-size:12px;
+    color:var(--muted);
+    margin-left:auto;
+  }
+  .list{
+    padding:10px;
+    min-height:220px;
+  }
+  .card{
+    background:linear-gradient(180deg,var(--card),var(--card2));
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:10px 11px;
+    margin:0 0 10px 0;
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
+  }
+  .card-title{
+    font-size:15px;
+    font-weight:700;
+    line-height:1.35;
+    margin-bottom:4px;
+  }
+  .card-desc{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.45;
+    margin-bottom:8px;
+  }
+  .controls{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  button{
+    appearance:none;
+    border:none;
+    background:#263247;
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.08);
+    padding:7px 10px;
+    border-radius:10px;
+    font-size:12px;
+    line-height:1;
+  }
+  button:active{
+    transform:translateY(1px);
+    background:#31405b;
+  }
+  .move{
+    min-width:38px;
+    font-weight:700;
+  }
+  .small{
+    font-size:11px;
+    color:var(--muted);
+  }
+  .footer{
+    padding:0 16px 18px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>価値観ボード（スマホ安定版）</h1>
+    <div class="sub">iPhone で安定して使えるように、ドラッグではなくボタン操作にした版です。左右移動で列を移動、↑↓で上下並べ替えできます。自動保存されます。</div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="footer">
+    使い方: カードの ← → で列移動、↑ ↓ でその列の中の順番を変更します。<br>
+    列は「価値観リスト → バツ → 三角 → 丸 → 二重丸 → 星」の順です。
+  </div>
+
+<script>
+(function(){
+  const VALUES = [
+    ["責任","責任を持って行動する"],
+    ["伝統","過去から続くパターンを尊重する"],
+    ["配慮","他人を配慮し、世話をする"],
+    ["人気","多くの人から好感を得る"],
+    ["単婚","唯一愛せる相手を見つける"],
+    ["調和","周囲の環境と調和して生きる"],
+    ["自治","他人に任せず自分で決定する"],
+    ["権威","他人に責任を持ち指導する"],
+    ["希望","ポジティブで楽観的に生きる"],
+    ["合理","理性と論理に従う"],
+    ["親密","プライベートな経験を他の人と共有する"],
+    ["権力","他人をコントロールする"],
+    ["自尊","自分に自信を持つ"],
+    ["保護","他人の世話を引き受ける"],
+    ["誓約","決して破られない約束や誓いを結ぶ"],
+    ["安定","いつも一定で変化のない人生を送る"],
+    ["義務","自分の義務と責任を果たす"],
+    ["単純","シンプルでミニマルな生活をする"],
+    ["恋愛","興奮して燃え上がるような愛をする"],
+    ["遊楽","遊んで楽しむこと"],
+    ["真実","自分が正しいと思う通りに行動する"],
+    ["快適","喜びに満ちた快適な人生を送る"],
+    ["協力","他人と協力して何かをする"],
+    ["勤勉","自分の仕事に最善を尽くし熱心に取り組む"],
+    ["名声","有名になり存在を認められる"],
+    ["謙虚","素朴で謙虚に生きる"],
+    ["危険","リスクを冒して機会を手に入れる"],
+    ["快楽","気持ち良くなること"],
+    ["平穏","自分の内面の平和を保つ"],
+    ["秩序","整理され秩序ある人生を送る"],
+    ["興奮","スリルと刺激に満ちた人生を送る"],
+    ["慈愛","他人を心配し、助ける"],
+    ["受諾","ありのままの自分を受け入れる"],
+    ["目的","人生の意味と方向性を定める"],
+    ["献身","誰かに奉仕する"],
+    ["正確","自分の意見と信念を正確に伝える"],
+    ["礼儀","他人に誠実で礼儀正しく接する"],
+    ["受容","ありのままの自分を受け入れてもらいたい"],
+    ["笑い","人生と世界のユーモラスな側面を見る"],
+    ["情熱","ある発想、活動、人々に深い感情を抱く"],
+    ["柔軟","新しい環境にも容易に適応する"],
+    ["寛大","自分の持ち物を他の人に与える"],
+    ["正義","全ての人を公平に扱う"],
+    ["反抗","権威や規則に疑問を持ち対抗する"],
+    ["適度","過度を避け、適切なポイントを見つける"],
+    ["安全","安堵感を得る"],
+    ["魅力","身体的な魅力を保つ"],
+    ["体力","丈夫で強い体を保つ"],
+    ["創造","新しく斬新なアイデアを生み出す"],
+    ["独立","他人に依存せずに生きる"],
+    ["正直","嘘をつかず正直に生きる"],
+    ["愛慕","誰かに愛を与える"],
+    ["現実","現実的かつ実践的に行動する"],
+    ["有益","他人の役に立つこと"],
+    ["孤独","他人から離れて一人でいられる時間と空間を持つ"],
+    ["成長","変化と成長を続ける"],
+    ["美的","周囲の美しいものを味わう"],
+    ["家族","幸せで愛情に満ちた家庭を作る"],
+    ["寵愛","近しい人から愛される"],
+    ["寛容","自分と異なる存在を尊重し受け入れる"],
+    ["熟達","いつもする仕事・作業に熟練する"],
+    ["貞節","パートナーに嘘をつかず誠実に生きる"],
+    ["自知","自分自身について深い理解を持つ"],
+    ["許容","他の人を許しながら生きる"],
+    ["挑戦","難しいことや問題に挑戦する"],
+    ["冒険","新しくワクワクする経験をする"],
+    ["知識","価値ある知識を学ぶ、または生み出す"],
+    ["信仰","自分を超えた存在の意思を考える"],
+    ["精神","精神的に成長し、成熟する"],
+    ["現在","今この瞬間に集中して生きる"],
+    ["開放","新しい経験、発想、選択肢に心を開く"],
+    ["性愛","活動的で満足のいく性生活を送る"],
+    ["変化","変化に富んだ多様で多彩な人生を送る"],
+    ["信頼","信用があり、頼りになる人になる"],
+    ["貢献","世の中に役立つことをする"],
+    ["余暇","自分の時間をリラックスして楽しむ"],
+    ["友情","親密に助け合う友人を作る"],
+    ["健康","健康でコンディション良く生きる"],
+    ["自制","自分の行動を自分でコントロールする"],
+    ["達成","何か重要なことを成し遂げる"]
+  ];
+
+  const COLS = [
+    {id:"pool", label:"価値観リスト", symbol:"≡"},
+    {id:"x", label:"バツ", symbol:"×"},
+    {id:"triangle", label:"三角", symbol:"△"},
+    {id:"circle", label:"丸", symbol:"○"},
+    {id:"double", label:"二重丸", symbol:"◎"},
+    {id:"star", label:"星", symbol:"★"}
+  ];
+  const ORDER = COLS.map(c => c.id);
+  const KEY = "values-kanban-buttons-v1";
+
+  function escapeHtml(s){
+    return String(s)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#39;");
+  }
+
+  function makeDefaultState(){
+    return {
+      columns:{
+        pool: VALUES.map((v,i)=>({id:"v"+i,title:v[0],desc:v[1]})),
+        x:[], triangle:[], circle:[], double:[], star:[]
+      }
+    };
+  }
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return makeDefaultState();
+      const parsed = JSON.parse(raw);
+      if(!parsed || !parsed.columns) return makeDefaultState();
+      return parsed;
+    }catch(e){
+      return makeDefaultState();
+    }
+  }
+
+  let state = loadState();
+  const board = document.getElementById("board");
+
+  function save(){
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  function findCard(cardId){
+    for(const colId in state.columns){
+      const idx = state.columns[colId].findIndex(c => c.id === cardId);
+      if(idx !== -1){
+        return {colId, idx, card: state.columns[colId][idx]};
+      }
+    }
+    return null;
+  }
+
+  function moveAcross(cardId, direction){
+    const found = findCard(cardId);
+    if(!found) return;
+    const currentIndex = ORDER.indexOf(found.colId);
+    const nextIndex = currentIndex + direction;
+    if(nextIndex < 0 || nextIndex >= ORDER.length) return;
+    const nextCol = ORDER[nextIndex];
+
+    state.columns[found.colId].splice(found.idx, 1);
+    state.columns[nextCol].push(found.card);
+    save();
+    render();
+  }
+
+  function moveWithin(cardId, direction){
+    const found = findCard(cardId);
+    if(!found) return;
+    const arr = state.columns[found.colId];
+    const newIndex = found.idx + direction;
+    if(newIndex < 0 || newIndex >= arr.length) return;
+
+    const item = arr.splice(found.idx, 1)[0];
+    arr.splice(newIndex, 0, item);
+    save();
+    render();
+  }
+
+  function render(){
+    board.innerHTML = "";
+    for(const meta of COLS){
+      const section = document.createElement("section");
+      section.className = "col";
+
+      const header = document.createElement("div");
+      header.className = "col-header";
+      header.innerHTML = `
+        <div class="col-title">
+          <span class="symbol">${meta.symbol}</span>
+          <span>${meta.label}</span>
+          <span class="badge">${state.columns[meta.id].length}</span>
+        </div>
+      `;
+      section.appendChild(header);
+
+      const list = document.createElement("div");
+      list.className = "list";
+
+      state.columns[meta.id].forEach((card, idx) => {
+        const colPos = ORDER.indexOf(meta.id);
+        const canLeft = colPos > 0;
+        const canRight = colPos < ORDER.length - 1;
+        const canUp = idx > 0;
+        const canDown = idx < state.columns[meta.id].length - 1;
+
+        const el = document.createElement("div");
+        el.className = "card";
+        el.innerHTML = `
+          <div class="card-title">${escapeHtml(card.title)}</div>
+          <div class="card-desc">${escapeHtml(card.desc)}</div>
+          <div class="controls">
+            <button class="move" data-action="left" data-card-id="${card.id}" ${canLeft ? "" : "disabled"}>←</button>
+            <button class="move" data-action="right" data-card-id="${card.id}" ${canRight ? "" : "disabled"}>→</button>
+            <button class="move" data-action="up" data-card-id="${card.id}" ${canUp ? "" : "disabled"}>↑</button>
+            <button class="move" data-action="down" data-card-id="${card.id}" ${canDown ? "" : "disabled"}>↓</button>
+          </div>
+        `;
+        list.appendChild(el);
+      });
+
+      section.appendChild(list);
+      board.appendChild(section);
+    }
+
+    board.querySelectorAll("button[data-action]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const action = btn.getAttribute("data-action");
+        const cardId = btn.getAttribute("data-card-id");
+        if(action === "left") moveAcross(cardId, -1);
+        if(action === "right") moveAcross(cardId, 1);
+        if(action === "up") moveWithin(cardId, -1);
+        if(action === "down") moveWithin(cardId, 1);
+      });
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
