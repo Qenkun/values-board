@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>価値観ボード（多言語版）</title>
+<style>
+  :root{
+    --bg1:#fff7fb;
+    --bg2:#f7f1ff;
+    --panel:#fff8fd;
+    --panel2:#f7eefe;
+    --card:#ffe9f6;
+    --card2:#f7ddff;
+    --text:#4b335d;
+    --muted:#7f6893;
+    --border:#e7c9ea;
+    --button:#f6d8ef;
+    --button-active:#efc3e4;
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    color:var(--text);
+    background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  }
+  .header{
+    position:sticky; top:0; z-index:50;
+    padding:14px 16px 12px;
+    background:rgba(255,247,251,.94);
+    border-bottom:1px solid rgba(140,95,160,.14);
+    backdrop-filter:blur(10px);
+  }
+  .langbar{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  h1{margin:0;font-size:20px}
+  .sub{
+    margin-top:6px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.55;
+  }
+
+  .board-wrap{
+    overflow-x:auto;
+    padding:14px;
+  }
+  .board{
+    display:grid;
+    grid-template-columns:320px repeat(5, 250px);
+    gap:12px;
+    min-width:max-content;
+    align-items:start;
+  }
+
+  .col{
+    background:linear-gradient(180deg,var(--panel),#fff3fb);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    min-height:72vh;
+    box-shadow:0 10px 24px rgba(192,139,182,.16);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .col-header{
+    padding:12px 12px 10px;
+    border-bottom:1px solid rgba(140,95,160,.12);
+    background:rgba(255,248,253,.98);
+    z-index:2;
+    flex:0 0 auto;
+  }
+  .col-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:15px;
+    font-weight:700;
+  }
+  .symbol{
+    width:24px;height:24px;border-radius:8px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--panel2);
+    border:1px solid rgba(140,95,160,.12);
+    font-size:14px;
+    flex:0 0 auto;
+  }
+  .badge{
+    background:var(--panel2);
+    border:1px solid rgba(140,95,160,.12);
+    padding:3px 8px;
+    border-radius:999px;
+    font-size:12px;
+    color:var(--muted);
+    margin-left:auto;
+    flex:0 0 auto;
+  }
+
+  .list{
+    padding:12px 10px 10px;
+    min-height:220px;
+    flex:1 1 auto;
+  }
+
+  .card{
+    background:linear-gradient(180deg,var(--card),var(--card2));
+    border:1px solid rgba(140,95,160,.14);
+    border-radius:16px;
+    padding:12px 12px 11px;
+    margin:0 0 12px 0;
+    box-shadow:0 6px 14px rgba(201,153,191,.12);
+  }
+  .card-title{
+    font-size:15px;
+    font-weight:700;
+    line-height:1.35;
+    margin-bottom:5px;
+  }
+  .card-desc{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.5;
+    margin-bottom:9px;
+  }
+
+  .controls{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  button{
+    appearance:none;
+    border:none;
+    background:var(--button);
+    color:var(--text);
+    border:1px solid rgba(140,95,160,.12);
+    padding:8px 11px;
+    border-radius:12px;
+    font-size:12px;
+    line-height:1;
+    box-shadow:0 2px 6px rgba(192,139,182,.08);
+  }
+  button:active{
+    transform:translateY(1px);
+    background:var(--button-active);
+  }
+  button:disabled{
+    opacity:.42;
+  }
+  .move{
+    min-width:40px;
+    font-weight:700;
+  }
+  .lang-btn.active{
+    background:#eeb9de;
+    font-weight:700;
+  }
+  .footer{
+    padding:0 16px 18px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+  <div class="header" id="header">
+    <div class="langbar" id="langbar"></div>
+    <h1 id="title"></h1>
+    <div class="sub" id="subtitle"></div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="footer" id="footer"></div>
+
+<script>
+(function(){
+  const VALUE_KEYS = [
+    "responsibility","tradition","consideration","popularity","monogamy","harmony","autonomy","authority","hope","reason","intimacy","power","selfEsteem","protection","commitment","stability",
+    "duty","simplicity","romance","fun","truth","comfort","cooperation","diligence","fame","humility","risk","pleasure","peace","order","excitement",
+    "compassion","selfAcceptance","purpose","devotion","accuracy","courtesy","acceptance","humor","passion","flexibility","generosity","justice","rebellion","moderation","safety","attractiveness","fitness",
+    "creativity","independence","honesty","love","reality","helpfulness","solitude","growth","aesthetics","family",
+    "beingLoved","tolerance","mastery","fidelity","selfKnowledge","forgiveness","challenge","adventure","knowledge","faith","spirituality","presence","openness","sexuality","change","trust","contribution","leisure","friendship","health","selfControl","achievement"
+  ];
+
+  const VALUE_TEXT = {
+    ja: {
+      responsibility:["責任","責任を持って行動する"], tradition:["伝統","過去から続くパターンを尊重する"], consideration:["配慮","他人を配慮し、世話をする"],
+      popularity:["人気","多くの人から好感を得る"], monogamy:["単婚","唯一愛せる相手を見つける"], harmony:["調和","周囲の環境と調和して生きる"],
+      autonomy:["自治","他人に任せず自分で決定する"], authority:["権威","他人に責任を持ち指導する"], hope:["希望","ポジティブで楽観的に生きる"],
+      reason:["合理","理性と論理に従う"], intimacy:["親密","プライベートな経験を他の人と共有する"], power:["権力","他人をコントロールする"],
+      selfEsteem:["自尊","自分に自信を持つ"], protection:["保護","他人の世話を引き受ける"], commitment:["誓約","決して破られない約束や誓いを結ぶ"],
+      stability:["安定","いつも一定で変化のない人生を送る"], duty:["義務","自分の義務と責任を果たす"], simplicity:["単純","シンプルでミニマルな生活をする"],
+      romance:["恋愛","興奮して燃え上がるような愛をする"], fun:["遊楽","遊んで楽しむこと"], truth:["真実","自分が正しいと思う通りに行動する"],
+      comfort:["快適","喜びに満ちた快適な人生を送る"], cooperation:["協力","他人と協力して何かをする"], diligence:["勤勉","自分の仕事に最善を尽くし熱心に取り組む"],
+      fame:["名声","有名になり存在を認められる"], humility:["謙虚","素朴で謙虚に生きる"], risk:["危険","リスクを冒して機会を手に入れる"],
+      pleasure:["快楽","気持ち良くなること"], peace:["平穏","自分の内面の平和を保つ"], order:["秩序","整理され秩序ある人生を送る"],
+      excitement:["興奮","スリルと刺激に満ちた人生を送る"], compassion:["慈愛","他人を心配し、助ける"], selfAcceptance:["受諾","ありのままの自分を受け入れる"],
+      purpose:["目的","人生の意味と方向性を定める"], devotion:["献身","誰かに奉仕する"], accuracy:["正確","自分の意見と信念を正確に伝える"],
+      courtesy:["礼儀","他人に誠実で礼儀正しく接する"], acceptance:["受容","ありのままの自分を受け入れてもらいたい"], humor:["笑い","人生と世界のユーモラスな側面を見る"],
+      passion:["情熱","ある発想、活動、人々に深い感情を抱く"], flexibility:["柔軟","新しい環境にも容易に適応する"], generosity:["寛大","自分の持ち物を他の人に与える"],
+      justice:["正義","全ての人を公平に扱う"], rebellion:["反抗","権威や規則に疑問を持ち対抗する"], moderation:["適度","過度を避け、適切なポイントを見つける"],
+      safety:["安全","安堵感を得る"], attractiveness:["魅力","身体的な魅力を保つ"], fitness:["体力","丈夫で強い体を保つ"],
+      creativity:["創造","新しく斬新なアイデアを生み出す"], independence:["独立","他人に依存せずに生きる"], honesty:["正直","嘘をつかず正直に生きる"],
+      love:["愛慕","誰かに愛を与える"], reality:["現実","現実的かつ実践的に行動する"], helpfulness:["有益","他人の役に立つこと"],
+      solitude:["孤独","他人から離れて一人でいられる時間と空間を持つ"], growth:["成長","変化と成長を続ける"], aesthetics:["美的","周囲の美しいものを味わう"],
+      family:["家族","幸せで愛情に満ちた家庭を作る"], beingLoved:["寵愛","近しい人から愛される"], tolerance:["寛容","自分と異なる存在を尊重し受け入れる"],
+      mastery:["熟達","いつもする仕事・作業に熟練する"], fidelity:["貞節","パートナーに嘘をつかず誠実に生きる"], selfKnowledge:["自知","自分自身について深い理解を持つ"],
+      forgiveness:["許容","他の人を許しながら生きる"], challenge:["挑戦","難しいことや問題に挑戦する"], adventure:["冒険","新しくワクワクする経験をする"],
+      knowledge:["知識","価値ある知識を学ぶ、または生み出す"], faith:["信仰","自分を超えた存在の意思を考える"], spirituality:["精神","精神的に成長し、成熟する"],
+      presence:["現在","今この瞬間に集中して生きる"], openness:["開放","新しい経験、発想、選択肢に心を開く"], sexuality:["性愛","活動的で満足のいく性生活を送る"],
+      change:["変化","変化に富んだ多様で多彩な人生を送る"], trust:["信頼","信用があり、頼りになる人になる"], contribution:["貢献","世の中に役立つことをする"],
+      leisure:["余暇","自分の時間をリラックスして楽しむ"], friendship:["友情","親密に助け合う友人を作る"], health:["健康","健康でコンディション良く生きる"],
+      selfControl:["自制","自分の行動を自分でコントロールする"], achievement:["達成","何か重要なことを成し遂げる"]
+    },
+    en: {
+      responsibility:["Responsibility","Act responsibly"], tradition:["Tradition","Respect long-standing patterns from the past"], consideration:["Consideration","Be considerate and care for others"],
+      popularity:["Popularity","Be liked by many people"], monogamy:["Monogamy","Find the one person to love"], harmony:["Harmony","Live in harmony with the surrounding environment"],
+      autonomy:["Autonomy","Decide for yourself rather than leaving it to others"], authority:["Authority","Lead others with responsibility"], hope:["Hope","Live positively and optimistically"],
+      reason:["Reason","Follow reason and logic"], intimacy:["Intimacy","Share private experiences with others"], power:["Power","Control others"],
+      selfEsteem:["Self-esteem","Have confidence in yourself"], protection:["Protection","Take responsibility for caring for others"], commitment:["Commitment","Make promises or vows that are never broken"],
+      stability:["Stability","Live a steady life without change"], duty:["Duty","Fulfill your duties and responsibilities"], simplicity:["Simplicity","Live a simple and minimal life"],
+      romance:["Romance","Experience exciting, passionate love"], fun:["Fun","Play and enjoy yourself"], truth:["Truth","Act according to what you believe is right"],
+      comfort:["Comfort","Live a pleasant and comfortable life"], cooperation:["Cooperation","Do things together with others"], diligence:["Diligence","Work hard and do your best"],
+      fame:["Fame","Be known and recognized"], humility:["Humility","Live modestly and humbly"], risk:["Risk","Take risks to gain opportunities"],
+      pleasure:["Pleasure","Feel good and enjoy pleasure"], peace:["Peace","Maintain inner peace"], order:["Order","Live an organized and orderly life"],
+      excitement:["Excitement","Live a thrilling and stimulating life"], compassion:["Compassion","Care about and help others"], selfAcceptance:["Self-acceptance","Accept yourself as you are"],
+      purpose:["Purpose","Define meaning and direction in life"], devotion:["Devotion","Serve someone or something"], accuracy:["Accuracy","Express your views and beliefs accurately"],
+      courtesy:["Courtesy","Treat others sincerely and politely"], acceptance:["Acceptance","Be accepted as you are"], humor:["Humor","See the humorous side of life and the world"],
+      passion:["Passion","Feel deeply about ideas, activities, or people"], flexibility:["Flexibility","Adapt easily to new environments"], generosity:["Generosity","Give your possessions to others"],
+      justice:["Justice","Treat everyone fairly"], rebellion:["Rebellion","Question and resist authority or rules"], moderation:["Moderation","Avoid excess and find the right balance"],
+      safety:["Safety","Feel secure"], attractiveness:["Attractiveness","Maintain physical attractiveness"], fitness:["Fitness","Maintain a strong and healthy body"],
+      creativity:["Creativity","Create new and original ideas"], independence:["Independence","Live without depending on others"], honesty:["Honesty","Live truthfully without lies"],
+      love:["Love","Give love to someone"], reality:["Reality","Act realistically and practically"], helpfulness:["Helpfulness","Be useful to others"],
+      solitude:["Solitude","Have time and space to be alone"], growth:["Growth","Keep changing and growing"], aesthetics:["Aesthetics","Appreciate beautiful things around you"],
+      family:["Family","Build a happy and loving family"], beingLoved:["Being loved","Be loved by those close to you"], tolerance:["Tolerance","Respect and accept those who are different"],
+      mastery:["Mastery","Become skilled at what you do regularly"], fidelity:["Fidelity","Be honest and faithful to your partner"], selfKnowledge:["Self-knowledge","Deeply understand yourself"],
+      forgiveness:["Forgiveness","Live while forgiving others"], challenge:["Challenge","Take on difficult things and problems"], adventure:["Adventure","Have new and exciting experiences"],
+      knowledge:["Knowledge","Learn or create valuable knowledge"], faith:["Faith","Reflect on the will of something greater than yourself"], spirituality:["Spirituality","Grow and mature spiritually"],
+      presence:["Presence","Focus on this present moment"], openness:["Openness","Be open to new experiences, ideas, and options"], sexuality:["Sexuality","Live an active and satisfying sex life"],
+      change:["Change","Live a varied and diverse life full of change"], trust:["Trust","Be someone reliable and trustworthy"], contribution:["Contribution","Do something useful for society"],
+      leisure:["Leisure","Relax and enjoy your own time"], friendship:["Friendship","Build close, supportive friendships"], health:["Health","Live in good health and condition"],
+      selfControl:["Self-control","Control your own behavior"], achievement:["Achievement","Accomplish something important"]
+    },
+    ko: {
+      responsibility:["책임","책임감 있게 행동하기"], tradition:["전통","과거부터 이어진 패턴을 존중하기"], consideration:["배려","타인을 배려하고 돌보기"],
+      popularity:["인기","많은 사람들에게 호감을 얻기"], monogamy:["일부일처","오직 한 사람을 사랑하기"], harmony:["조화","주변 환경과 조화를 이루며 살기"],
+      autonomy:["자율","남에게 맡기지 않고 스스로 결정하기"], authority:["권위","책임을 지고 다른 사람을 이끌기"], hope:["희망","긍정적이고 낙관적으로 살기"],
+      reason:["합리","이성과 논리를 따르기"], intimacy:["친밀","사적인 경험을 다른 사람과 나누기"], power:["권력","다른 사람을 통제하기"],
+      selfEsteem:["자존","자신감을 가지기"], protection:["보호","다른 사람을 돌보는 책임을 맡기"], commitment:["서약","절대 깨지지 않는 약속이나 맹세를 하기"],
+      stability:["안정","늘 일정하고 변화 없는 삶을 살기"], duty:["의무","자신의 의무와 책임을 다하기"], simplicity:["단순","심플하고 미니멀한 삶을 살기"],
+      romance:["연애","설레고 뜨거운 사랑을 하기"], fun:["즐거움","놀고 즐기기"], truth:["진실","자신이 옳다고 믿는 대로 행동하기"],
+      comfort:["쾌적","기쁨이 가득한 편안한 삶을 살기"], cooperation:["협력","다른 사람과 함께 무언가 하기"], diligence:["근면","일에 최선을 다하고 성실히 임하기"],
+      fame:["명성","유명해지고 존재를 인정받기"], humility:["겸손","소박하고 겸손하게 살기"], risk:["위험","기회를 얻기 위해 위험을 감수하기"],
+      pleasure:["쾌락","기분 좋고 즐거움을 느끼기"], peace:["평온","내면의 평화를 유지하기"], order:["질서","정리되고 질서 있는 삶을 살기"],
+      excitement:["흥분","스릴과 자극이 가득한 삶을 살기"], compassion:["자애","타인을 걱정하고 돕기"], selfAcceptance:["자기수용","있는 그대로의 자신을 받아들이기"],
+      purpose:["목적","삶의 의미와 방향을 정하기"], devotion:["헌신","누군가에게 봉사하기"], accuracy:["정확","자신의 의견과 신념을 정확하게 전달하기"],
+      courtesy:["예의","타인에게 성실하고 예의 바르게 대하기"], acceptance:["수용","있는 그대로의 자신을 받아들여지기 원하기"], humor:["유머","삶과 세상의 유머러스한 면을 보기"],
+      passion:["열정","아이디어, 활동, 사람에 깊은 감정을 느끼기"], flexibility:["유연성","새 환경에도 쉽게 적응하기"], generosity:["관대함","자신의 것을 다른 사람에게 나누어 주기"],
+      justice:["정의","모든 사람을 공정하게 대하기"], rebellion:["반항","권위나 규칙에 의문을 품고 맞서기"], moderation:["절제","지나침을 피하고 적절한 균형 찾기"],
+      safety:["안전","안도감을 얻기"], attractiveness:["매력","신체적 매력을 유지하기"], fitness:["체력","튼튼하고 강한 몸을 유지하기"],
+      creativity:["창조","새롭고 독창적인 아이디어를 만들기"], independence:["독립","다른 사람에게 의존하지 않고 살기"], honesty:["정직","거짓 없이 정직하게 살기"],
+      love:["애정","누군가에게 사랑을 주기"], reality:["현실","현실적이고 실용적으로 행동하기"], helpfulness:["유익","다른 사람에게 도움이 되기"],
+      solitude:["고독","혼자 있을 수 있는 시간과 공간 가지기"], growth:["성장","변화하고 계속 성장하기"], aesthetics:["미적","주변의 아름다운 것을 음미하기"],
+      family:["가족","행복하고 사랑이 넘치는 가정을 만들기"], beingLoved:["사랑받음","가까운 사람들에게 사랑받기"], tolerance:["관용","다른 존재를 존중하고 받아들이기"],
+      mastery:["숙달","늘 하는 일이나 작업에 능숙해지기"], fidelity:["정절","파트너에게 거짓 없이 성실하게 살기"], selfKnowledge:["자기이해","자신을 깊이 이해하기"],
+      forgiveness:["용서","다른 사람을 용서하며 살기"], challenge:["도전","어려운 일과 문제에 도전하기"], adventure:["모험","새롭고 설레는 경험을 하기"],
+      knowledge:["지식","가치 있는 지식을 배우거나 만들어내기"], faith:["신앙","자신을 넘어선 존재의 뜻을 생각하기"], spirituality:["정신성","정신적으로 성장하고 성숙해지기"],
+      presence:["현재","지금 이 순간에 집중하며 살기"], openness:["개방","새로운 경험, 발상, 선택지에 마음을 열기"], sexuality:["성","활동적이고 만족스러운 성생활을 하기"],
+      change:["변화","변화가 풍부하고 다채로운 삶을 살기"], trust:["신뢰","믿을 수 있고 의지가 되는 사람이 되기"], contribution:["기여","세상에 도움이 되는 일을 하기"],
+      leisure:["여가","자신의 시간을 편안히 즐기기"], friendship:["우정","가깝고 서로 돕는 친구를 만들기"], health:["건강","건강하고 좋은 컨디션으로 살기"],
+      selfControl:["자제","자신의 행동을 스스로 통제하기"], achievement:["성취","중요한 일을 이루어내기"]
+    },
+    es: {
+      responsibility:["Responsabilidad","Actuar con responsabilidad"], tradition:["Tradición","Respetar los patrones que vienen del pasado"], consideration:["Consideración","Ser considerado y cuidar de los demás"],
+      popularity:["Popularidad","Ser bien valorado por muchas personas"], monogamy:["Monogamia","Encontrar a una única persona para amar"], harmony:["Armonía","Vivir en armonía con el entorno"],
+      autonomy:["Autonomía","Decidir por uno mismo sin dejarlo en manos de otros"], authority:["Autoridad","Guiar a otros con responsabilidad"], hope:["Esperanza","Vivir de forma positiva y optimista"],
+      reason:["Razón","Seguir la razón y la lógica"], intimacy:["Intimidad","Compartir experiencias privadas con otras personas"], power:["Poder","Controlar a otras personas"],
+      selfEsteem:["Autoestima","Tener confianza en uno mismo"], protection:["Protección","Asumir el cuidado de otras personas"], commitment:["Compromiso","Hacer promesas o votos que no se rompan"],
+      stability:["Estabilidad","Vivir una vida constante y sin cambios"], duty:["Deber","Cumplir con los deberes y responsabilidades"], simplicity:["Simplicidad","Vivir de forma simple y minimalista"],
+      romance:["Romance","Vivir un amor intenso y apasionado"], fun:["Diversión","Jugar y disfrutar"], truth:["Verdad","Actuar según lo que uno cree correcto"],
+      comfort:["Comodidad","Vivir una vida agradable y cómoda"], cooperation:["Cooperación","Hacer cosas junto con otras personas"], diligence:["Dedicación","Esforzarse al máximo en el trabajo"],
+      fame:["Fama","Ser conocido y reconocido"], humility:["Humildad","Vivir de manera modesta y humilde"], risk:["Riesgo","Asumir riesgos para conseguir oportunidades"],
+      pleasure:["Placer","Sentirse bien y disfrutar"], peace:["Paz","Mantener la paz interior"], order:["Orden","Vivir una vida ordenada y organizada"],
+      excitement:["Emoción","Vivir una vida llena de estímulo y emoción"], compassion:["Compasión","Preocuparse por los demás y ayudar"], selfAcceptance:["Autoaceptación","Aceptarse tal como uno es"],
+      purpose:["Propósito","Definir el sentido y la dirección de la vida"], devotion:["Devoción","Servir a alguien o a algo"], accuracy:["Precisión","Expresar con precisión opiniones y creencias"],
+      courtesy:["Cortesía","Tratar a los demás con sinceridad y educación"], acceptance:["Aceptación","Ser aceptado tal como uno es"], humor:["Humor","Ver el lado divertido de la vida y del mundo"],
+      passion:["Pasión","Sentir intensamente por ideas, actividades o personas"], flexibility:["Flexibilidad","Adaptarse fácilmente a nuevos entornos"], generosity:["Generosidad","Dar a otros lo que uno posee"],
+      justice:["Justicia","Tratar a todas las personas con equidad"], rebellion:["Rebeldía","Cuestionar y oponerse a la autoridad o las reglas"], moderation:["Moderación","Evitar los excesos y encontrar el punto adecuado"],
+      safety:["Seguridad","Sentir tranquilidad y seguridad"], attractiveness:["Atractivo","Mantener el atractivo físico"], fitness:["Condición física","Mantener un cuerpo fuerte y sano"],
+      creativity:["Creatividad","Crear ideas nuevas y originales"], independence:["Independencia","Vivir sin depender de otros"], honesty:["Honestidad","Vivir con sinceridad y sin mentiras"],
+      love:["Amor","Dar amor a alguien"], reality:["Realismo","Actuar de forma realista y práctica"], helpfulness:["Utilidad","Ser útil para otras personas"],
+      solitude:["Soledad","Tener tiempo y espacio para estar solo"], growth:["Crecimiento","Seguir cambiando y creciendo"], aesthetics:["Estética","Apreciar las cosas bellas que te rodean"],
+      family:["Familia","Construir una familia feliz y amorosa"], beingLoved:["Ser amado","Ser amado por las personas cercanas"], tolerance:["Tolerancia","Respetar y aceptar a quienes son diferentes"],
+      mastery:["Dominio","Perfeccionarse en las tareas habituales"], fidelity:["Fidelidad","Ser fiel y honesto con la pareja"], selfKnowledge:["Autoconocimiento","Comprenderse profundamente a uno mismo"],
+      forgiveness:["Perdón","Vivir perdonando a los demás"], challenge:["Desafío","Enfrentar cosas y problemas difíciles"], adventure:["Aventura","Tener experiencias nuevas y emocionantes"],
+      knowledge:["Conocimiento","Aprender o crear conocimiento valioso"], faith:["Fe","Reflexionar sobre la voluntad de algo más grande que uno mismo"], spirituality:["Espiritualidad","Crecer y madurar espiritualmente"],
+      presence:["Presencia","Concentrarse en este momento presente"], openness:["Apertura","Abrirse a nuevas experiencias, ideas y opciones"], sexuality:["Sexualidad","Tener una vida sexual activa y satisfactoria"],
+      change:["Cambio","Vivir una vida variada y llena de cambios"], trust:["Confianza","Ser una persona confiable"], contribution:["Contribución","Hacer algo útil para la sociedad"],
+      leisure:["Ocio","Relajarse y disfrutar del propio tiempo"], friendship:["Amistad","Construir amistades cercanas y solidarias"], health:["Salud","Vivir con buena salud y en buen estado"],
+      selfControl:["Autocontrol","Controlar el propio comportamiento"], achievement:["Logro","Conseguir algo importante"]
+    }
+  };
+
+  const UI_TEXT = {
+    ja: {
+      appTitle:"価値観ボード（多言語版）",
+      subtitle:"ヘッダー上の言語ボタンで、日本語・韓国語・英語・スペイン語に切り替えできます。カードごとに、行きたい列の記号ボタンを押して移動できます。↑↓で列の中の順番を変更できます。自動保存されます。",
+      footer:"使い方: カードの × △ ○ ◎ ★ ボタンでその列へ移動します。↑ ↓ でその列の中の順番を変更します。<br>左端の「≡」は価値観リストへ戻すボタンです。",
+      columns:{pool:"価値観リスト",x:"バツ",triangle:"三角",circle:"丸",double:"二重丸",star:"星"},
+      langs:{ja:"日本語",ko:"한국어",en:"English",es:"Español"}
+    },
+    en: {
+      appTitle:"Values Board (Multilingual)",
+      subtitle:"Use the language buttons above to switch between Japanese, Korean, English, and Spanish. For each card, tap a symbol button to move it to a column. Use ↑↓ to reorder within a column. Changes are saved automatically.",
+      footer:"How to use: Tap × △ ○ ◎ ★ to move a card to that column. Use ↑ ↓ to change the order inside the same column.<br>The leftmost ≡ button sends the card back to the values list.",
+      columns:{pool:"Values List",x:"X",triangle:"Triangle",circle:"Circle",double:"Double Circle",star:"Star"},
+      langs:{ja:"Japanese",ko:"Korean",en:"English",es:"Spanish"}
+    },
+    ko: {
+      appTitle:"가치관 보드 (다국어판)",
+      subtitle:"위의 언어 버튼으로 일본어, 한국어, 영어, 스페인어로 전환할 수 있습니다. 각 카드에서 원하는 열의 기호 버튼을 눌러 이동할 수 있고, ↑↓로 같은 열 안에서 순서를 바꿀 수 있습니다. 자동 저장됩니다.",
+      footer:"사용법: 카드의 × △ ○ ◎ ★ 버튼을 눌러 해당 열로 이동합니다. ↑ ↓ 로 같은 열 안의 순서를 바꿉니다.<br>맨 왼쪽의 ≡ 버튼은 가치관 목록으로 되돌리는 버튼입니다.",
+      columns:{pool:"가치관 목록",x:"엑스",triangle:"삼각",circle:"원",double:"이중원",star:"별"},
+      langs:{ja:"일본어",ko:"한국어",en:"영어",es:"스페인어"}
+    },
+    es: {
+      appTitle:"Tablero de Valores (multilingüe)",
+      subtitle:"Usa los botones de idioma de arriba para cambiar entre japonés, coreano, inglés y español. En cada tarjeta, toca un botón de símbolo para moverla a una columna. Usa ↑↓ para cambiar el orden dentro de la misma columna. Los cambios se guardan automáticamente.",
+      footer:"Uso: Toca × △ ○ ◎ ★ para mover una tarjeta a esa columna. Usa ↑ ↓ para cambiar el orden dentro de la misma columna.<br>El botón ≡ de la izquierda devuelve la tarjeta a la lista de valores.",
+      columns:{pool:"Lista de valores",x:"X",triangle:"Triángulo",circle:"Círculo",double:"Doble círculo",star:"Estrella"},
+      langs:{ja:"Japonés",ko:"Coreano",en:"Inglés",es:"Español"}
+    }
+  };
+
+  const COLS = [
+    {id:"pool", symbol:"≡"},
+    {id:"x", symbol:"×"},
+    {id:"triangle", symbol:"△"},
+    {id:"circle", symbol:"○"},
+    {id:"double", symbol:"◎"},
+    {id:"star", symbol:"★"}
+  ];
+
+  const KEY = "values-kanban-symbol-buttons-multilang-layout-v1";
+  const LANG_KEY = "values-kanban-ui-lang-layout-v1";
+
+  function escapeHtml(s){
+    return String(s)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#39;");
+  }
+
+  function makeDefaultState(){
+    return {
+      columns:{
+        pool: VALUE_KEYS.map((key,i)=>({id:"v"+i,key:key})),
+        x:[], triangle:[], circle:[], double:[], star:[]
+      }
+    };
+  }
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return makeDefaultState();
+      const parsed = JSON.parse(raw);
+      if(!parsed || !parsed.columns) return makeDefaultState();
+      return parsed;
+    }catch(e){
+      return makeDefaultState();
+    }
+  }
+
+  function loadLang(){
+    const saved = localStorage.getItem(LANG_KEY);
+    return UI_TEXT[saved] ? saved : "ja";
+  }
+
+  let state = loadState();
+  let currentLang = loadLang();
+  const board = document.getElementById("board");
+
+  function save(){
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  function saveLang(){
+    localStorage.setItem(LANG_KEY, currentLang);
+  }
+
+  function getValueText(key){
+    return VALUE_TEXT[currentLang][key] || VALUE_TEXT.ja[key];
+  }
+
+  function setLanguage(lang){
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    saveLang();
+    render();
+  }
+
+  function findCard(cardId){
+    for(const colId in state.columns){
+      const idx = state.columns[colId].findIndex(c => c.id === cardId);
+      if(idx !== -1){
+        return {colId, idx, card: state.columns[colId][idx]};
+      }
+    }
+    return null;
+  }
+
+  function moveToColumn(cardId, targetCol){
+    const found = findCard(cardId);
+    if(!found || found.colId === targetCol) return;
+    state.columns[found.colId].splice(found.idx, 1);
+    state.columns[targetCol].push(found.card);
+    save();
+    render();
+  }
+
+  function moveWithin(cardId, direction){
+    const found = findCard(cardId);
+    if(!found) return;
+    const arr = state.columns[found.colId];
+    const newIndex = found.idx + direction;
+    if(newIndex < 0 || newIndex >= arr.length) return;
+    const item = arr.splice(found.idx, 1)[0];
+    arr.splice(newIndex, 0, item);
+    save();
+    render();
+  }
+
+  function renderLangBar(){
+    const t = UI_TEXT[currentLang];
+    const langbar = document.getElementById("langbar");
+    langbar.innerHTML = "";
+    ["ja","ko","en","es"].forEach(lang => {
+      const btn = document.createElement("button");
+      btn.className = "lang-btn" + (lang === currentLang ? " active" : "");
+      btn.textContent = t.langs[lang];
+      btn.addEventListener("click", () => setLanguage(lang));
+      langbar.appendChild(btn);
+    });
+    document.getElementById("title").textContent = t.appTitle;
+    document.getElementById("subtitle").textContent = t.subtitle;
+    document.getElementById("footer").innerHTML = t.footer;
+  }
+
+  function render(){
+    renderLangBar();
+    board.innerHTML = "";
+    const t = UI_TEXT[currentLang];
+
+    for(const meta of COLS){
+      const section = document.createElement("section");
+      section.className = "col";
+
+      const header = document.createElement("div");
+      header.className = "col-header";
+      header.innerHTML = `
+        <div class="col-title">
+          <span class="symbol">${meta.symbol}</span>
+          <span>${escapeHtml(t.columns[meta.id])}</span>
+          <span class="badge">${state.columns[meta.id].length}</span>
+        </div>
+      `;
+      section.appendChild(header);
+
+      const list = document.createElement("div");
+      list.className = "list";
+
+      state.columns[meta.id].forEach((card, idx) => {
+        const canUp = idx > 0;
+        const canDown = idx < state.columns[meta.id].length - 1;
+        const [title, desc] = getValueText(card.key);
+
+        const targetButtons = COLS.map(col => {
+          const disabled = col.id === meta.id ? "disabled" : "";
+          return `<button class="move" data-action="moveTo" data-target="${col.id}" data-card-id="${card.id}" ${disabled}>${col.symbol}</button>`;
+        }).join("");
+
+        const el = document.createElement("div");
+        el.className = "card";
+        el.innerHTML = `
+          <div class="card-title">${escapeHtml(title)}</div>
+          <div class="card-desc">${escapeHtml(desc)}</div>
+          <div class="controls">
+            ${targetButtons}
+            <button class="move" data-action="up" data-card-id="${card.id}" ${canUp ? "" : "disabled"}>↑</button>
+            <button class="move" data-action="down" data-card-id="${card.id}" ${canDown ? "" : "disabled"}>↓</button>
+          </div>
+        `;
+        list.appendChild(el);
+      });
+
+      section.appendChild(list);
+      board.appendChild(section);
+    }
+
+    board.querySelectorAll("button[data-action]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const action = btn.getAttribute("data-action");
+        const cardId = btn.getAttribute("data-card-id");
+        if(action === "moveTo") moveToColumn(cardId, btn.getAttribute("data-target"));
+        if(action === "up") moveWithin(cardId, -1);
+        if(action === "down") moveWithin(cardId, 1);
+      });
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
