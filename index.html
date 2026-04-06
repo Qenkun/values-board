@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+　<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
@@ -21,7 +21,6 @@
       --radius-md: 16px;
       --radius-sm: 12px;
       --column-width: 360px;
-      --header-height: auto;
     }
 
     * { box-sizing: border-box; }
@@ -251,7 +250,20 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'values-board-v2';
+    const STORAGE_KEY = 'values-board-v3';
+
+    const cardKeys = [
+      'responsibility','tradition','care','popularity','monogamy','harmony','autonomy','authority',
+      'hope','rationality','intimacy','power','selfesteem','protection','commitment','stability',
+      'duty','simplicity','romance','fun','truth','comfort','cooperation','diligence',
+      'fame','humility','risk','pleasure','peace','order','excitement','kindness',
+      'acceptance','purpose','devotion','accuracy','politeness','approval','humor','passion',
+      'flexibility','generosity','justice','rebellion','moderation','safety','attractiveness','fitness',
+      'creativity','independence','honesty','love','practicality','usefulness','solitude','growth',
+      'aesthetics','family','affection','tolerance','mastery','fidelity','selfknowledge','forgiveness',
+      'challenge','adventure','knowledge','faith','spirituality','present','openness','sexuality',
+      'change','trust','contribution','leisure','friendship','health','selfcontrol','achievement'
+    ];
 
     const translations = {
       ja: {
@@ -261,89 +273,89 @@
         columns: ['価値観リスト', '×', '△', '○', '◎', '★'],
         empty: 'この列にはまだカードがありません。',
         cards: {
-  responsibility:{title:"責任",desc:"責任を持って行動する"},
-  tradition:{title:"伝統",desc:"過去から続くパターンを尊重する"},
-  care:{title:"配慮",desc:"他人を配慮し、世話をする"},
-  popularity:{title:"人気",desc:"多くの人から好感を得る"},
-  monogamy:{title:"単婚",desc:"唯一愛せる相手を見つける"},
-  harmony:{title:"調和",desc:"周囲の環境と調和して生きる"},
-  autonomy:{title:"自治",desc:"他人に任せず自分で決定する"},
-  authority:{title:"権威",desc:"他人に責任を持ち指導する"},
-  hope:{title:"希望",desc:"ポジティブで楽観的に生きる"},
-  rationality:{title:"合理",desc:"理性と論理に従う"},
-  intimacy:{title:"親密",desc:"プライベートな経験を共有する"},
-  power:{title:"権力",desc:"他人をコントロールする"},
-  selfesteem:{title:"自尊",desc:"自分に自信を持つ"},
-  protection:{title:"保護",desc:"他人の世話を引き受ける"},
-  commitment:{title:"誓約",desc:"決して破られない約束を結ぶ"},
-  stability:{title:"安定",desc:"一定で変化のない人生"},
-  duty:{title:"義務",desc:"義務と責任を果たす"},
-  simplicity:{title:"単純",desc:"シンプルでミニマルな生活"},
-  romance:{title:"恋愛",desc:"燃え上がるような愛"},
-  fun:{title:"遊楽",desc:"遊んで楽しむ"},
-  truth:{title:"真実",desc:"正しいと思う通りに行動する"},
-  comfort:{title:"快適",desc:"喜びに満ちた人生"},
-  cooperation:{title:"協力",desc:"他人と協力する"},
-  diligence:{title:"勤勉",desc:"仕事に最善を尽くす"},
-  fame:{title:"名声",desc:"有名になる"},
-  humility:{title:"謙虚",desc:"素朴で謙虚に生きる"},
-  risk:{title:"危険",desc:"リスクを取る"},
-  pleasure:{title:"快楽",desc:"気持ちよさ"},
-  peace:{title:"平穏",desc:"内面の平和"},
-  order:{title:"秩序",desc:"整理された人生"},
-  excitement:{title:"興奮",desc:"刺激的な人生"},
-  kindness:{title:"慈愛",desc:"他人を助ける"},
-  acceptance:{title:"受諾",desc:"ありのままの自分を受け入れる"},
-  purpose:{title:"目的",desc:"人生の意味を持つ"},
-  devotion:{title:"献身",desc:"誰かに奉仕する"},
-  accuracy:{title:"正確",desc:"正確に伝える"},
-  politeness:{title:"礼儀",desc:"礼儀正しく接する"},
-  approval:{title:"受容",desc:"受け入れてもらう"},
-  humor:{title:"笑い",desc:"ユーモアを楽しむ"},
-  passion:{title:"情熱",desc:"強い感情を持つ"},
-  flexibility:{title:"柔軟",desc:"環境に適応する"},
-  generosity:{title:"寛大",desc:"他人に与える"},
-  justice:{title:"正義",desc:"公平に扱う"},
-  rebellion:{title:"反抗",desc:"権威に疑問を持つ"},
-  moderation:{title:"適度",desc:"バランスを取る"},
-  safety:{title:"安全",desc:"安心を得る"},
-  attractiveness:{title:"魅力",desc:"魅力を保つ"},
-  fitness:{title:"体力",desc:"強い体"},
-  creativity:{title:"創造",desc:"新しいアイデア"},
-  independence:{title:"独立",desc:"依存しない"},
-  honesty:{title:"正直",desc:"嘘をつかない"},
-  love:{title:"愛慕",desc:"愛を与える"},
-  practicality:{title:"現実",desc:"現実的に行動"},
-  usefulness:{title:"有益",desc:"役に立つ"},
-  solitude:{title:"孤独",desc:"一人の時間"},
-  growth:{title:"成長",desc:"成長し続ける"},
-  aesthetics:{title:"美的",desc:"美を味わう"},
-  family:{title:"家族",desc:"愛ある家庭"},
-  affection:{title:"寵愛",desc:"愛される"},
-  tolerance:{title:"寛容",desc:"違いを受け入れる"},
-  mastery:{title:"熟達",desc:"熟練する"},
-  fidelity:{title:"貞節",desc:"誠実でいる"},
-  selfknowledge:{title:"自知",desc:"自分を理解する"},
-  forgiveness:{title:"許容",desc:"他人を許す"},
-  challenge:{title:"挑戦",desc:"困難に向かう"},
-  adventure:{title:"冒険",desc:"新しい経験"},
-  knowledge:{title:"知識",desc:"学ぶ"},
-  faith:{title:"信仰",desc:"超越的存在を信じる"},
-  spirituality:{title:"精神",desc:"精神的成長"},
-  present:{title:"現在",desc:"今に集中"},
-  openness:{title:"開放",desc:"新しいものを受け入れる"},
-  sexuality:{title:"性愛",desc:"満足のいく性生活"},
-  change:{title:"変化",desc:"変化のある人生"},
-  trust:{title:"信頼",desc:"頼られる人になる"},
-  contribution:{title:"貢献",desc:"社会に役立つ"},
-  leisure:{title:"余暇",desc:"リラックス"},
-  friendship:{title:"友情",desc:"助け合う関係"},
-  health:{title:"健康",desc:"健康に生きる"},
-  selfcontrol:{title:"自制",desc:"自分をコントロール"},
-  achievement:{title:"達成",desc:"重要なことを成し遂げる"}
-}
+          responsibility:{title:'責任',desc:'責任を持って行動する'},
+          tradition:{title:'伝統',desc:'過去から続くパターンを尊重する'},
+          care:{title:'配慮',desc:'他人を配慮し、世話をする'},
+          popularity:{title:'人気',desc:'多くの人から好感を得る'},
+          monogamy:{title:'単婚',desc:'唯一愛せる相手を見つける'},
+          harmony:{title:'調和',desc:'周囲の環境と調和して生きる'},
+          autonomy:{title:'自治',desc:'他人に任せず自分で決定する'},
+          authority:{title:'権威',desc:'他人に責任を持ち指導する'},
+          hope:{title:'希望',desc:'ポジティブで楽観的に生きる'},
+          rationality:{title:'合理',desc:'理性と論理に従う'},
+          intimacy:{title:'親密',desc:'プライベートな経験を他の人と共有する'},
+          power:{title:'権力',desc:'他人をコントロールする'},
+          selfesteem:{title:'自尊',desc:'自分に自信を持つ'},
+          protection:{title:'保護',desc:'他人の世話を引き受ける'},
+          commitment:{title:'誓約',desc:'決して破られない約束や誓いを結ぶ'},
+          stability:{title:'安定',desc:'いつも一定で変化のない人生を送る'},
+          duty:{title:'義務',desc:'自分の義務と責任を果たす'},
+          simplicity:{title:'単純',desc:'シンプルでミニマルな生活をする'},
+          romance:{title:'恋愛',desc:'興奮して燃え上がるような愛をする'},
+          fun:{title:'遊楽',desc:'遊んで楽しむこと'},
+          truth:{title:'真実',desc:'自分が正しいと思う通りに行動する'},
+          comfort:{title:'快適',desc:'喜びに満ちた快適な人生を送る'},
+          cooperation:{title:'協力',desc:'他人と協力して何かをする'},
+          diligence:{title:'勤勉',desc:'自分の仕事に最善を尽くし熱心に取り組む'},
+          fame:{title:'名声',desc:'有名になり存在を認められる'},
+          humility:{title:'謙虚',desc:'素朴で謙虚に生きる'},
+          risk:{title:'危険',desc:'リスクを冒して機会を手に入れる'},
+          pleasure:{title:'快楽',desc:'気持ち良くなること'},
+          peace:{title:'平穏',desc:'自分の内面の平和を保つ'},
+          order:{title:'秩序',desc:'整理され秩序ある人生を送る'},
+          excitement:{title:'興奮',desc:'スリルと刺激に満ちた人生を送る'},
+          kindness:{title:'慈愛',desc:'他人を心配し、助ける'},
+          acceptance:{title:'受諾',desc:'ありのままの自分を受け入れる'},
+          purpose:{title:'目的',desc:'人生の意味と方向性を定める'},
+          devotion:{title:'献身',desc:'誰かに奉仕する'},
+          accuracy:{title:'正確',desc:'自分の意見と信念を正確に伝える'},
+          politeness:{title:'礼儀',desc:'他人に誠実で礼儀正しく接する'},
+          approval:{title:'受容',desc:'ありのままの自分を受け入れてもらいたい'},
+          humor:{title:'笑い',desc:'人生と世界のユーモラスな側面を見る'},
+          passion:{title:'情熱',desc:'ある発想、活動、人々に深い感情を抱く'},
+          flexibility:{title:'柔軟',desc:'新しい環境にも容易に適応する'},
+          generosity:{title:'寛大',desc:'自分の持ち物を他の人に与える'},
+          justice:{title:'正義',desc:'全ての人を公平に扱う'},
+          rebellion:{title:'反抗',desc:'権威や規則に疑問を持ち対抗する'},
+          moderation:{title:'適度',desc:'過度を避け、適切なポイントを見つける'},
+          safety:{title:'安全',desc:'安堵感を得る'},
+          attractiveness:{title:'魅力',desc:'身体的な魅力を保つ'},
+          fitness:{title:'体力',desc:'丈夫で強い体を保つ'},
+          creativity:{title:'創造',desc:'新しく斬新なアイデアを生み出す'},
+          independence:{title:'独立',desc:'他人に依存せずに生きる'},
+          honesty:{title:'正直',desc:'嘘をつかず正直に生きる'},
+          love:{title:'愛慕',desc:'誰かに愛を与える'},
+          practicality:{title:'現実',desc:'現実的かつ実践的に行動する'},
+          usefulness:{title:'有益',desc:'他人の役に立つこと'},
+          solitude:{title:'孤独',desc:'他人から離れて一人でいられる時間と空間を持つ'},
+          growth:{title:'成長',desc:'変化と成長を続ける'},
+          aesthetics:{title:'美的',desc:'周囲の美しいものを味わう'},
+          family:{title:'家族',desc:'幸せで愛情に満ちた家庭を作る'},
+          affection:{title:'寵愛',desc:'近しい人から愛される'},
+          tolerance:{title:'寛容',desc:'自分と異なる存在を尊重し受け入れる'},
+          mastery:{title:'熟達',desc:'いつもする仕事・作業に熟練する'},
+          fidelity:{title:'貞節',desc:'パートナーに嘘をつかず誠実に生きる'},
+          selfknowledge:{title:'自知',desc:'自分自身について深い理解を持つ'},
+          forgiveness:{title:'許容',desc:'他の人を許しながら生きる'},
+          challenge:{title:'挑戦',desc:'難しいことや問題に挑戦する'},
+          adventure:{title:'冒険',desc:'新しくワクワクする経験をする'},
+          knowledge:{title:'知識',desc:'価値ある知識を学ぶ、または生み出す'},
+          faith:{title:'信仰',desc:'自分を超えた存在の意思を考える'},
+          spirituality:{title:'精神',desc:'精神的に成長し、成熟する'},
+          present:{title:'現在',desc:'今この瞬間に集中して生きる'},
+          openness:{title:'開放',desc:'新しい経験、発想、選択肢に心を開く'},
+          sexuality:{title:'性愛',desc:'活動的で満足のいく性生活を送る'},
+          change:{title:'変化',desc:'変化に富んだ多様で多彩な人生を送る'},
+          trust:{title:'信頼',desc:'信用があり、頼りになる人になる'},
+          contribution:{title:'貢献',desc:'世の中に役立つことをする'},
+          leisure:{title:'余暇',desc:'自分の時間をリラックスして楽しむ'},
+          friendship:{title:'友情',desc:'親密に助け合う友人を作る'},
+          health:{title:'健康',desc:'健康でコンディション良く生きる'},
+          selfcontrol:{title:'自制',desc:'自分の行動を自分でコントロールする'},
+          achievement:{title:'達成',desc:'何か重要なことを成し遂げる'}
         }
       },
+
       ko: {
         langName: '한국어',
         title: '가치관 보드 (다국어판)',
@@ -351,18 +363,89 @@
         columns: ['가치관 목록', '×', '△', '○', '◎', '★'],
         empty: '이 열에는 아직 카드가 없습니다.',
         cards: {
-          responsibility: { title: '책임', desc: '자신의 역할을 받아들이고 끝까지 해낸다' },
-          tradition: { title: '전통', desc: '과거로부터 이어진 패턴을 존중한다' },
-          care: { title: '배려', desc: '타인을 배려하고 돌본다' },
-          honesty: { title: '성실', desc: '거짓을 피하고 바르게 행동한다' },
-          growth: { title: '성장', desc: '배우며 자신을 넓혀 간다' },
-          freedom: { title: '자유', desc: '억압받지 않고 선택하고 움직일 수 있는 상태를 소중히 여긴다' },
-          creativity: { title: '창의성', desc: '새로운 발상과 표현을 만들어 낸다' },
-          stability: { title: '안정', desc: '안심할 수 있는 삶의 기반을 유지한다' },
-          challenge: { title: '도전', desc: '어려운 일에도 적극적으로 나아간다' },
-          connection: { title: '연결', desc: '사람과의 신뢰와 유대감을 소중히 한다' }
+          responsibility:{title:'책임',desc:'책임감을 가지고 행동한다'},
+          tradition:{title:'전통',desc:'과거부터 이어진 패턴을 존중한다'},
+          care:{title:'배려',desc:'타인을 배려하고 돌본다'},
+          popularity:{title:'인기',desc:'많은 사람에게 호감을 얻는다'},
+          monogamy:{title:'단혼',desc:'오직 한 사람만 사랑할 상대를 찾는다'},
+          harmony:{title:'조화',desc:'주변 환경과 조화를 이루며 산다'},
+          autonomy:{title:'자치',desc:'남에게 맡기지 않고 스스로 결정한다'},
+          authority:{title:'권위',desc:'타인에게 책임을 지고 지도한다'},
+          hope:{title:'희망',desc:'긍정적이고 낙관적으로 산다'},
+          rationality:{title:'합리',desc:'이성과 논리에 따른다'},
+          intimacy:{title:'친밀',desc:'사적인 경험을 다른 사람과 공유한다'},
+          power:{title:'권력',desc:'다른 사람을 통제한다'},
+          selfesteem:{title:'자존',desc:'자신에 대한 자신감을 가진다'},
+          protection:{title:'보호',desc:'타인을 돌보는 책임을 맡는다'},
+          commitment:{title:'맹세',desc:'절대 깨지지 않는 약속이나 맹세를 한다'},
+          stability:{title:'안정',desc:'항상 일정하고 변화 없는 삶을 산다'},
+          duty:{title:'의무',desc:'자신의 의무와 책임을 다한다'},
+          simplicity:{title:'단순',desc:'심플하고 미니멀한 삶을 산다'},
+          romance:{title:'연애',desc:'불타오르는 사랑을 한다'},
+          fun:{title:'유락',desc:'놀고 즐긴다'},
+          truth:{title:'진실',desc:'자신이 옳다고 믿는 대로 행동한다'},
+          comfort:{title:'쾌적',desc:'기쁨이 가득한 편안한 삶을 산다'},
+          cooperation:{title:'협력',desc:'다른 사람과 협력한다'},
+          diligence:{title:'근면',desc:'일에 최선을 다하고 성실히 임한다'},
+          fame:{title:'명성',desc:'유명해지고 존재를 인정받는다'},
+          humility:{title:'겸손',desc:'소박하고 겸손하게 산다'},
+          risk:{title:'위험',desc:'위험을 감수하고 기회를 잡는다'},
+          pleasure:{title:'쾌락',desc:'기분 좋음을 추구한다'},
+          peace:{title:'평온',desc:'내면의 평화를 지킨다'},
+          order:{title:'질서',desc:'정돈되고 질서 있는 삶을 산다'},
+          excitement:{title:'흥분',desc:'스릴과 자극이 가득한 삶을 산다'},
+          kindness:{title:'자애',desc:'타인을 걱정하고 돕는다'},
+          acceptance:{title:'수락',desc:'있는 그대로의 자신을 받아들인다'},
+          purpose:{title:'목적',desc:'삶의 의미와 방향을 정한다'},
+          devotion:{title:'헌신',desc:'누군가에게 봉사한다'},
+          accuracy:{title:'정확',desc:'의견과 신념을 정확히 전달한다'},
+          politeness:{title:'예의',desc:'타인에게 성실하고 예의 바르게 대한다'},
+          approval:{title:'수용',desc:'있는 그대로의 자신을 받아들여지길 바란다'},
+          humor:{title:'웃음',desc:'인생과 세상의 유머러스한 면을 본다'},
+          passion:{title:'열정',desc:'아이디어, 활동, 사람들에게 깊은 감정을 느낀다'},
+          flexibility:{title:'유연',desc:'새 환경에도 쉽게 적응한다'},
+          generosity:{title:'관대',desc:'자신의 것을 다른 사람에게 준다'},
+          justice:{title:'정의',desc:'모든 사람을 공평하게 대한다'},
+          rebellion:{title:'반항',desc:'권위나 규칙에 의문을 품고 맞선다'},
+          moderation:{title:'적절',desc:'지나침을 피하고 균형점을 찾는다'},
+          safety:{title:'안전',desc:'안도감을 얻는다'},
+          attractiveness:{title:'매력',desc:'신체적 매력을 유지한다'},
+          fitness:{title:'체력',desc:'튼튼하고 강한 몸을 유지한다'},
+          creativity:{title:'창조',desc:'새롭고 참신한 아이디어를 만든다'},
+          independence:{title:'독립',desc:'다른 사람에게 의존하지 않고 산다'},
+          honesty:{title:'정직',desc:'거짓말하지 않고 정직하게 산다'},
+          love:{title:'애모',desc:'누군가에게 사랑을 준다'},
+          practicality:{title:'현실',desc:'현실적이고 실용적으로 행동한다'},
+          usefulness:{title:'유익',desc:'다른 사람에게 도움이 된다'},
+          solitude:{title:'고독',desc:'혼자 있을 시간과 공간을 가진다'},
+          growth:{title:'성장',desc:'변화와 성장을 계속한다'},
+          aesthetics:{title:'미적',desc:'주변의 아름다움을 음미한다'},
+          family:{title:'가족',desc:'행복하고 사랑이 가득한 가정을 만든다'},
+          affection:{title:'총애',desc:'가까운 사람에게 사랑받는다'},
+          tolerance:{title:'관용',desc:'다른 존재를 존중하고 받아들인다'},
+          mastery:{title:'숙달',desc:'하는 일과 작업에 숙련된다'},
+          fidelity:{title:'정절',desc:'파트너에게 거짓 없이 성실하게 산다'},
+          selfknowledge:{title:'자지',desc:'자기 자신에 대해 깊이 이해한다'},
+          forgiveness:{title:'용서',desc:'다른 사람을 용서하며 산다'},
+          challenge:{title:'도전',desc:'어려운 일과 문제에 도전한다'},
+          adventure:{title:'모험',desc:'새롭고 설레는 경험을 한다'},
+          knowledge:{title:'지식',desc:'가치 있는 지식을 배우거나 만들어낸다'},
+          faith:{title:'신앙',desc:'자신을 초월한 존재의 뜻을 생각한다'},
+          spirituality:{title:'정신',desc:'정신적으로 성장하고 성숙한다'},
+          present:{title:'현재',desc:'지금 이 순간에 집중해 산다'},
+          openness:{title:'개방',desc:'새 경험, 생각, 선택지에 마음을 연다'},
+          sexuality:{title:'성애',desc:'활동적이고 만족스러운 성생활을 한다'},
+          change:{title:'변화',desc:'변화롭고 다채로운 삶을 산다'},
+          trust:{title:'신뢰',desc:'믿을 수 있고 의지가 되는 사람이 된다'},
+          contribution:{title:'공헌',desc:'세상에 도움이 되는 일을 한다'},
+          leisure:{title:'여가',desc:'자신의 시간을 편안히 즐긴다'},
+          friendship:{title:'우정',desc:'친밀하고 서로 돕는 친구를 만든다'},
+          health:{title:'건강',desc:'건강하고 좋은 컨디션으로 산다'},
+          selfcontrol:{title:'자제',desc:'자신의 행동을 스스로 통제한다'},
+          achievement:{title:'달성',desc:'중요한 일을 이뤄낸다'}
         }
       },
+
       en: {
         langName: 'English',
         title: 'Values Board (Multilingual)',
@@ -370,18 +453,89 @@
         columns: ['Values List', '×', '△', '○', '◎', '★'],
         empty: 'There are no cards in this column yet.',
         cards: {
-          responsibility: { title: 'Responsibility', desc: 'Take ownership of your role and follow through' },
-          tradition: { title: 'Tradition', desc: 'Respect patterns and wisdom carried from the past' },
-          care: { title: 'Care', desc: 'Be considerate and take care of others' },
-          honesty: { title: 'Honesty', desc: 'Avoid deception and act straightforwardly' },
-          growth: { title: 'Growth', desc: 'Keep learning and expanding yourself' },
-          freedom: { title: 'Freedom', desc: 'Value the ability to choose and move without constraint' },
-          creativity: { title: 'Creativity', desc: 'Generate new ideas and forms of expression' },
-          stability: { title: 'Stability', desc: 'Maintain a secure and dependable foundation' },
-          challenge: { title: 'Challenge', desc: 'Move toward difficult things with courage' },
-          connection: { title: 'Connection', desc: 'Value trust, closeness, and human bonds' }
+          responsibility:{title:'Responsibility',desc:'Act with responsibility'},
+          tradition:{title:'Tradition',desc:'Respect patterns carried on from the past'},
+          care:{title:'Care',desc:'Be considerate and take care of others'},
+          popularity:{title:'Popularity',desc:'Be liked by many people'},
+          monogamy:{title:'Monogamy',desc:'Find one person to love deeply'},
+          harmony:{title:'Harmony',desc:'Live in harmony with your surroundings'},
+          autonomy:{title:'Autonomy',desc:'Decide for yourself rather than leaving it to others'},
+          authority:{title:'Authority',desc:'Lead others with responsibility'},
+          hope:{title:'Hope',desc:'Live positively and optimistically'},
+          rationality:{title:'Rationality',desc:'Follow reason and logic'},
+          intimacy:{title:'Intimacy',desc:'Share private experiences with others'},
+          power:{title:'Power',desc:'Control other people'},
+          selfesteem:{title:'Self-Esteem',desc:'Have confidence in yourself'},
+          protection:{title:'Protection',desc:'Take on caring for others'},
+          commitment:{title:'Commitment',desc:'Make promises or vows that are not to be broken'},
+          stability:{title:'Stability',desc:'Live a steady life with little change'},
+          duty:{title:'Duty',desc:'Fulfill your duties and responsibilities'},
+          simplicity:{title:'Simplicity',desc:'Live a simple and minimal life'},
+          romance:{title:'Romance',desc:'Experience passionate love'},
+          fun:{title:'Fun',desc:'Play and enjoy life'},
+          truth:{title:'Truth',desc:'Act according to what you believe is right'},
+          comfort:{title:'Comfort',desc:'Live a pleasant and comfortable life'},
+          cooperation:{title:'Cooperation',desc:'Do things together with others'},
+          diligence:{title:'Diligence',desc:'Do your best and work earnestly'},
+          fame:{title:'Fame',desc:'Become well-known and recognized'},
+          humility:{title:'Humility',desc:'Live modestly and humbly'},
+          risk:{title:'Risk',desc:'Take risks to gain opportunities'},
+          pleasure:{title:'Pleasure',desc:'Feel good and enjoy pleasure'},
+          peace:{title:'Peace',desc:'Maintain inner peace'},
+          order:{title:'Order',desc:'Live an organized and orderly life'},
+          excitement:{title:'Excitement',desc:'Live a thrilling and stimulating life'},
+          kindness:{title:'Compassion',desc:'Care about and help others'},
+          acceptance:{title:'Self-Acceptance',desc:'Accept yourself as you are'},
+          purpose:{title:'Purpose',desc:'Set meaning and direction in life'},
+          devotion:{title:'Devotion',desc:'Serve someone wholeheartedly'},
+          accuracy:{title:'Accuracy',desc:'Express your beliefs and opinions accurately'},
+          politeness:{title:'Courtesy',desc:'Treat others sincerely and politely'},
+          approval:{title:'Acceptance by Others',desc:'Be accepted as you are'},
+          humor:{title:'Humor',desc:'See the humorous side of life and the world'},
+          passion:{title:'Passion',desc:'Feel deeply about ideas, activities, or people'},
+          flexibility:{title:'Flexibility',desc:'Adapt easily to new environments'},
+          generosity:{title:'Generosity',desc:'Give what you have to others'},
+          justice:{title:'Justice',desc:'Treat everyone fairly'},
+          rebellion:{title:'Rebellion',desc:'Question and resist authority or rules'},
+          moderation:{title:'Moderation',desc:'Avoid excess and find balance'},
+          safety:{title:'Safety',desc:'Feel secure and reassured'},
+          attractiveness:{title:'Attractiveness',desc:'Maintain physical attractiveness'},
+          fitness:{title:'Physical Strength',desc:'Maintain a strong and healthy body'},
+          creativity:{title:'Creativity',desc:'Generate original and new ideas'},
+          independence:{title:'Independence',desc:'Live without depending on others'},
+          honesty:{title:'Honesty',desc:'Live truthfully without lying'},
+          love:{title:'Love',desc:'Give love to someone'},
+          practicality:{title:'Practicality',desc:'Act realistically and practically'},
+          usefulness:{title:'Usefulness',desc:'Be helpful to others'},
+          solitude:{title:'Solitude',desc:'Have time and space to be alone'},
+          growth:{title:'Growth',desc:'Continue changing and growing'},
+          aesthetics:{title:'Aesthetics',desc:'Appreciate beauty around you'},
+          family:{title:'Family',desc:'Create a happy and loving family'},
+          affection:{title:'Being Loved',desc:'Be loved by close people'},
+          tolerance:{title:'Tolerance',desc:'Respect and accept differences'},
+          mastery:{title:'Mastery',desc:'Become skilled at what you do regularly'},
+          fidelity:{title:'Fidelity',desc:'Live faithfully and honestly with your partner'},
+          selfknowledge:{title:'Self-Knowledge',desc:'Understand yourself deeply'},
+          forgiveness:{title:'Forgiveness',desc:'Live while forgiving others'},
+          challenge:{title:'Challenge',desc:'Take on difficult things and problems'},
+          adventure:{title:'Adventure',desc:'Have new and exciting experiences'},
+          knowledge:{title:'Knowledge',desc:'Learn or create valuable knowledge'},
+          faith:{title:'Faith',desc:'Consider the will of something greater than yourself'},
+          spirituality:{title:'Spirituality',desc:'Grow and mature spiritually'},
+          present:{title:'Presence',desc:'Live focused on this moment'},
+          openness:{title:'Openness',desc:'Be open to new experiences, ideas, and options'},
+          sexuality:{title:'Sexual Fulfillment',desc:'Have an active and satisfying sex life'},
+          change:{title:'Change',desc:'Live a varied and dynamic life'},
+          trust:{title:'Trust',desc:'Become someone reliable and trustworthy'},
+          contribution:{title:'Contribution',desc:'Do something useful for the world'},
+          leisure:{title:'Leisure',desc:'Relax and enjoy your own time'},
+          friendship:{title:'Friendship',desc:'Build close and supportive friendships'},
+          health:{title:'Health',desc:'Live in good health and condition'},
+          selfcontrol:{title:'Self-Control',desc:'Control your own behavior'},
+          achievement:{title:'Achievement',desc:'Accomplish something important'}
         }
       },
+
       es: {
         langName: 'Español',
         title: 'Tablero de Valores (Multilingüe)',
@@ -389,16 +543,86 @@
         columns: ['Lista de valores', '×', '△', '○', '◎', '★'],
         empty: 'Todavía no hay tarjetas en esta columna.',
         cards: {
-          responsibility: { title: 'Responsabilidad', desc: 'Aceptar tu papel y cumplir hasta el final' },
-          tradition: { title: 'Tradición', desc: 'Respetar los patrones y la sabiduría del pasado' },
-          care: { title: 'Consideración', desc: 'Cuidar a los demás con atención' },
-          honesty: { title: 'Honestidad', desc: 'Evitar el engaño y actuar con rectitud' },
-          growth: { title: 'Crecimiento', desc: 'Seguir aprendiendo y ampliándote' },
-          freedom: { title: 'Libertad', desc: 'Valorar poder elegir y moverte sin ataduras' },
-          creativity: { title: 'Creatividad', desc: 'Crear ideas y expresiones nuevas' },
-          stability: { title: 'Estabilidad', desc: 'Mantener una base segura y confiable' },
-          challenge: { title: 'Desafío', desc: 'Avanzar hacia lo difícil con valentía' },
-          connection: { title: 'Conexión', desc: 'Valorar la confianza y los lazos humanos' }
+          responsibility:{title:'Responsabilidad',desc:'Actuar con responsabilidad'},
+          tradition:{title:'Tradición',desc:'Respetar patrones heredados del pasado'},
+          care:{title:'Consideración',desc:'Cuidar y considerar a los demás'},
+          popularity:{title:'Popularidad',desc:'Ser apreciado por muchas personas'},
+          monogamy:{title:'Monogamia',desc:'Encontrar a una sola persona para amar'},
+          harmony:{title:'Armonía',desc:'Vivir en armonía con el entorno'},
+          autonomy:{title:'Autonomía',desc:'Decidir por uno mismo'},
+          authority:{title:'Autoridad',desc:'Guiar a otros con responsabilidad'},
+          hope:{title:'Esperanza',desc:'Vivir de manera positiva y optimista'},
+          rationality:{title:'Racionalidad',desc:'Seguir la razón y la lógica'},
+          intimacy:{title:'Intimidad',desc:'Compartir experiencias privadas con otros'},
+          power:{title:'Poder',desc:'Controlar a otras personas'},
+          selfesteem:{title:'Autoestima',desc:'Tener confianza en uno mismo'},
+          protection:{title:'Protección',desc:'Asumir el cuidado de otros'},
+          commitment:{title:'Compromiso',desc:'Hacer promesas o votos que no se rompan'},
+          stability:{title:'Estabilidad',desc:'Vivir una vida constante y sin grandes cambios'},
+          duty:{title:'Deber',desc:'Cumplir con obligaciones y responsabilidades'},
+          simplicity:{title:'Simplicidad',desc:'Vivir una vida simple y minimalista'},
+          romance:{title:'Romance',desc:'Vivir un amor apasionado'},
+          fun:{title:'Diversión',desc:'Jugar y disfrutar'},
+          truth:{title:'Verdad',desc:'Actuar según lo que crees correcto'},
+          comfort:{title:'Comodidad',desc:'Vivir una vida agradable y cómoda'},
+          cooperation:{title:'Cooperación',desc:'Hacer cosas junto con otros'},
+          diligence:{title:'Diligencia',desc:'Dar lo mejor de ti en el trabajo'},
+          fame:{title:'Fama',desc:'Ser reconocido y conocido'},
+          humility:{title:'Humildad',desc:'Vivir de forma modesta y humilde'},
+          risk:{title:'Riesgo',desc:'Arriesgarse para obtener oportunidades'},
+          pleasure:{title:'Placer',desc:'Sentirse bien'},
+          peace:{title:'Paz',desc:'Mantener la paz interior'},
+          order:{title:'Orden',desc:'Vivir una vida organizada y ordenada'},
+          excitement:{title:'Emoción',desc:'Vivir una vida llena de estímulo y emoción'},
+          kindness:{title:'Compasión',desc:'Preocuparse por otros y ayudar'},
+          acceptance:{title:'Autoaceptación',desc:'Aceptarte tal como eres'},
+          purpose:{title:'Propósito',desc:'Dar sentido y dirección a la vida'},
+          devotion:{title:'Devoción',desc:'Servir a alguien con entrega'},
+          accuracy:{title:'Precisión',desc:'Expresar con precisión tus opiniones y creencias'},
+          politeness:{title:'Cortesía',desc:'Tratar a otros con sinceridad y educación'},
+          approval:{title:'Aceptación',desc:'Ser aceptado tal como eres'},
+          humor:{title:'Humor',desc:'Ver el lado humorístico de la vida y del mundo'},
+          passion:{title:'Pasión',desc:'Sentir profundamente por ideas, actividades o personas'},
+          flexibility:{title:'Flexibilidad',desc:'Adaptarte fácilmente a nuevos entornos'},
+          generosity:{title:'Generosidad',desc:'Dar lo que tienes a otros'},
+          justice:{title:'Justicia',desc:'Tratar a todos con equidad'},
+          rebellion:{title:'Rebeldía',desc:'Cuestionar y resistir la autoridad o las reglas'},
+          moderation:{title:'Moderación',desc:'Evitar excesos y encontrar equilibrio'},
+          safety:{title:'Seguridad',desc:'Sentir tranquilidad y resguardo'},
+          attractiveness:{title:'Atractivo',desc:'Mantener el atractivo físico'},
+          fitness:{title:'Condición Física',desc:'Mantener un cuerpo fuerte y sano'},
+          creativity:{title:'Creatividad',desc:'Crear ideas nuevas y originales'},
+          independence:{title:'Independencia',desc:'Vivir sin depender de otros'},
+          honesty:{title:'Honestidad',desc:'Vivir sin mentir'},
+          love:{title:'Amor',desc:'Dar amor a alguien'},
+          practicality:{title:'Realismo',desc:'Actuar de forma realista y práctica'},
+          usefulness:{title:'Utilidad',desc:'Ser útil para otros'},
+          solitude:{title:'Soledad',desc:'Tener tiempo y espacio para estar solo'},
+          growth:{title:'Crecimiento',desc:'Seguir cambiando y creciendo'},
+          aesthetics:{title:'Estética',desc:'Apreciar la belleza que te rodea'},
+          family:{title:'Familia',desc:'Crear una familia feliz y amorosa'},
+          affection:{title:'Cariño Recibido',desc:'Ser amado por personas cercanas'},
+          tolerance:{title:'Tolerancia',desc:'Respetar y aceptar diferencias'},
+          mastery:{title:'Dominio',desc:'Volverte hábil en lo que haces regularmente'},
+          fidelity:{title:'Fidelidad',desc:'Vivir con honestidad y fidelidad hacia tu pareja'},
+          selfknowledge:{title:'Autoconocimiento',desc:'Comprenderte profundamente'},
+          forgiveness:{title:'Perdón',desc:'Vivir perdonando a los demás'},
+          challenge:{title:'Desafío',desc:'Enfrentar cosas y problemas difíciles'},
+          adventure:{title:'Aventura',desc:'Tener experiencias nuevas y emocionantes'},
+          knowledge:{title:'Conocimiento',desc:'Aprender o crear conocimiento valioso'},
+          faith:{title:'Fe',desc:'Pensar en la voluntad de algo más grande que tú'},
+          spirituality:{title:'Espiritualidad',desc:'Crecer y madurar espiritualmente'},
+          present:{title:'Presente',desc:'Vivir concentrado en este momento'},
+          openness:{title:'Apertura',desc:'Abrirte a nuevas experiencias, ideas y opciones'},
+          sexuality:{title:'Sexualidad',desc:'Tener una vida sexual activa y satisfactoria'},
+          change:{title:'Cambio',desc:'Vivir una vida variada y dinámica'},
+          trust:{title:'Confianza',desc:'Convertirte en alguien confiable'},
+          contribution:{title:'Contribución',desc:'Hacer algo útil para el mundo'},
+          leisure:{title:'Ocio',desc:'Relajarte y disfrutar tu tiempo'},
+          friendship:{title:'Amistad',desc:'Construir amistades cercanas y de apoyo'},
+          health:{title:'Salud',desc:'Vivir con buena salud y condición'},
+          selfcontrol:{title:'Autocontrol',desc:'Controlar tu propio comportamiento'},
+          achievement:{title:'Logro',desc:'Conseguir algo importante'}
         }
       }
     };
@@ -406,22 +630,52 @@
     const defaultState = {
       lang: 'ja',
       columns: [
-        ['responsibility','tradition','care','honesty','growth','freedom','creativity','stability','challenge','connection'],
-        [], [], [], [], []
+        [...cardKeys],
+        [],
+        [],
+        [],
+        [],
+        []
       ]
     };
+
+    function normalizeState(saved) {
+      const normalized = {
+        lang: saved?.lang && translations[saved.lang] ? saved.lang : 'ja',
+        columns: [[], [], [], [], [], []]
+      };
+
+      const seen = new Set();
+
+      if (saved && Array.isArray(saved.columns)) {
+        for (let i = 0; i < 6; i++) {
+          const col = Array.isArray(saved.columns[i]) ? saved.columns[i] : [];
+          col.forEach((key) => {
+            if (cardKeys.includes(key) && !seen.has(key)) {
+              normalized.columns[i].push(key);
+              seen.add(key);
+            }
+          });
+        }
+      }
+
+      cardKeys.forEach((key) => {
+        if (!seen.has(key)) {
+          normalized.columns[0].push(key);
+        }
+      });
+
+      return normalized;
+    }
 
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return structuredClone(defaultState);
+        if (!raw) return JSON.parse(JSON.stringify(defaultState));
         const parsed = JSON.parse(raw);
-        if (!parsed || !Array.isArray(parsed.columns) || parsed.columns.length !== 6) {
-          return structuredClone(defaultState);
-        }
-        return parsed;
+        return normalizeState(parsed);
       } catch {
-        return structuredClone(defaultState);
+        return JSON.parse(JSON.stringify(defaultState));
       }
     }
 
@@ -434,6 +688,7 @@
     function moveCard(cardKey, targetCol) {
       let currentCol = -1;
       let currentIndex = -1;
+
       state.columns.forEach((col, colIndex) => {
         const idx = col.indexOf(cardKey);
         if (idx !== -1) {
@@ -441,7 +696,9 @@
           currentIndex = idx;
         }
       });
+
       if (currentCol === -1 || currentCol === targetCol) return;
+
       state.columns[currentCol].splice(currentIndex, 1);
       state.columns[targetCol].push(cardKey);
       saveState();
@@ -456,6 +713,7 @@
         if (newIdx < 0 || newIdx >= col.length) return;
         [col[idx], col[newIdx]] = [col[newIdx], col[idx]];
       });
+
       saveState();
       render();
     }
@@ -485,6 +743,7 @@
 
       const switcher = document.getElementById('langSwitcher');
       switcher.innerHTML = '';
+
       Object.entries(translations).forEach(([key, value]) => {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -520,11 +779,14 @@
         } else {
           colCards.forEach((cardKey) => {
             const cardData = t.cards[cardKey];
+            if (!cardData) return;
+
             const card = document.createElement('article');
             card.className = 'card';
 
             const title = document.createElement('h3');
             title.textContent = cardData.title;
+
             const desc = document.createElement('p');
             desc.textContent = cardData.desc;
 
@@ -551,6 +813,7 @@
       });
     }
 
+    saveState();
     render();
   </script>
 </body>
